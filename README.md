@@ -1,4 +1,4 @@
-![Coverage](coverage_badge.svg) [![HitCount](https://hits.dwyl.com/Uuttssaavv/flutter-clean-architecture-riverpod.svg?style=flat-square)](http://hits.dwyl.com/Uuttssaavv/flutter-clean-architecture-riverpod)
+
 
 # Flutter Clean Architecture with Riverpod
 
@@ -148,60 +148,7 @@ final dashboardNotifierProvider =
 
 Notice how the abstract `NetworkService` is accessed from the repository implementation and then the abstract `DashboardRepository` is accessed from the `DashboardNotifier` and how each of these layers acheive separation and scalability by providing the ability to switch implementation and make changes and/or test each layer seaparately.
 
-### Testing
 
-The `test` folder mirrors the `lib` folder in addition to some test utilities.
-
-[`state_notifier_test`](https://pub.dev/packages/state_notifier_test) is used to test the `StateNotifier` and mock `Notifier`.
-
-[`mocktail`](https://pub.dev/packages/mocktail) is used to mock dependecies.
-
-#### 1. Testing the simple `Provider` provider:
-
-```dart
-test('dashboardDatasourceProvider is a DashboardDatasource', () {
-    dashboardDataSource = providerContainer.read
-    (dashboardDatasourceProvider(networkService));
-
-    expect(
-      dashboardDataSource,
-      isA<DashboardDatasource>(),
-    );
-  });
-```
-
-And here is how we can test it separately from Flutter:
-
-```dart
-void main() {
-  late DashboardDatasource dashboardDatasource;
-  late DashboardRepository dashboardRepository;
-  setUpAll(() {
-    dashboardDatasource = MockRemoteDatasource();
-    dashboardRepository = DashboardRepositoryImpl(dashboardDatasource);
-  });
-  test(
-    'Should return AppException on failure',
-    () async {
-      // arrange
-      when(() => dashboardDatasource.searchPaginatedProducts(skip: any(named: 'skip'), query: any(named: 'query')))
-          .thenAnswer(
-        (_) async => Left(ktestAppException),
-      );
-
-      // assert
-      final response = await dashboardRepository.searchProducts(skip: 1, query: '');
-
-      // act
-      expect(response.isLeft(), true);
-    },
-  );
-}
-
-class MockRemoteDatasource extends Mock implements DashboardRemoteDatasource {}
-```
-### To explore test coverage
-run  `bash gencov.sh`
 
 ### Folder Structure
 
@@ -302,30 +249,3 @@ lib
 │ │     └── button.dart
 │ ├──  dashboard
 ....
-```
-
-### Run this project
-
-##### Clone this repository
-
-` git clone https://github.com/Uuttssaavv/flutter-clean-architecture-riverpod`
-
-##### Go to the project directory
-
-` cd flutter-clean-architecture-riverpod`
-
-##### Get all the packages
-
-`flutter pub get`
-
-##### Run the build runner command
-
-`flutter pub run build_runner build `
-
-##### Run the project
-
-`flutter run` or simply press ` F5 key` if you are using VSCode
-
-### About Me
-
-Do visit my [portfolio site](https://utsavghimire.com.np) or connect with me on [linkedin](https://www.linkedin.com/in/utsav-ghimire-10352a18b/)
